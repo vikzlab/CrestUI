@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { CrestDataLogo } from '@/components/ui/CrestDataLogo';
 import { useHistoryStore } from '@/store/historyStore';
 import { useHealthCheck } from '@/hooks/useHealthCheck';
 
@@ -187,12 +188,19 @@ export function Settings() {
       {/* About */}
       <Card>
         <CardBody>
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-sm font-semibold text-slate-300">CrestSOC Triage System</div>
-              <div className="text-xs text-slate-500 mt-0.5">Version 1.0.0 · Crest Data Systems</div>
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-4">
+              <CrestDataLogo size="md" variant="full" />
+              <div className="h-8 w-px bg-slate-800" />
+              <div>
+                <div className="text-sm font-semibold text-slate-300">SOC Alert Triage System</div>
+                <div className="text-xs text-slate-500 mt-0.5">Version 1.0.0 · Phase 2 · Capstone 2026</div>
+              </div>
             </div>
-            <div className="text-xs text-slate-600 font-mono">capstone-2026</div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono text-violet-400 bg-violet-500/10 border border-violet-500/20 px-2 py-1 rounded-md">TRIAGE_PROMPT_V2.0</span>
+              <span className="text-xs font-mono text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2 py-1 rounded-md">claude-sonnet-4</span>
+            </div>
           </div>
         </CardBody>
       </Card>

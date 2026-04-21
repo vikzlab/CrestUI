@@ -1,6 +1,7 @@
 import type { TriageResult } from '@/types';
 import { VerdictBadge } from './VerdictBadge';
 import { Badge } from '@/components/ui/Badge';
+import { CrestDataLogo } from '@/components/ui/CrestDataLogo';
 import { CONFIDENCE_COLORS, PRIORITY_COLORS } from '@/utils/constants';
 import { clsx } from 'clsx';
 
@@ -40,17 +41,23 @@ export function VerdictHero({ result }: VerdictHeroProps) {
       </div>
 
       <div className="relative">
-        {/* Badges row */}
-        <div className="flex flex-wrap items-center gap-2 mb-6">
-          {auto_triggered && (
-            <Badge variant="auto" pulse>Auto-Triggered</Badge>
-          )}
-          {verdict.suppress_alert && (
-            <Badge variant="slate">Suppress Alert</Badge>
-          )}
-          {verdict.fallback_mode && (
-            <Badge variant="slate">Fallback Mode</Badge>
-          )}
+        {/* Top row: Crest Data branding + badges */}
+        <div className="flex items-start justify-between mb-6 gap-4">
+          <div className="flex flex-wrap items-center gap-2">
+            {auto_triggered && (
+              <Badge variant="auto" pulse>Auto-Triggered</Badge>
+            )}
+            {verdict.suppress_alert && (
+              <Badge variant="slate">Suppress Alert</Badge>
+            )}
+            {verdict.fallback_mode && (
+              <Badge variant="slate">Fallback Mode</Badge>
+            )}
+          </div>
+          {/* Crest Data logo watermark */}
+          <div className="flex-shrink-0 opacity-60">
+            <CrestDataLogo size="sm" variant="full" />
+          </div>
         </div>
 
         {/* Main verdict */}
