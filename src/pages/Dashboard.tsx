@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Activity, Clock, AlertTriangle, List, ChevronRight, Zap, TrendingUp } from 'lucide-react';
+import { Shield, Activity, Clock, AlertTriangle, List, ChevronRight, Zap, TrendingUp, BarChart2 } from 'lucide-react';
 import { TriageForm } from '@/components/triage/TriageForm';
 import { ProgressPipeline } from '@/components/triage/ProgressPipeline';
 import { VerdictBadge } from '@/components/results/VerdictBadge';
@@ -12,6 +12,44 @@ import { useQueue } from '@/hooks/useQueue';
 import { useTriage } from '@/hooks/useTriage';
 import { formatRelativeTime, formatDuration } from '@/utils/formatters';
 import { clsx } from 'clsx';
+
+interface BarSegment { label: string; count: number; color: string; bg: string }
+
+function MiniBarChart({ title, segments, total }: { title: string; segments: BarSegment[]; total: number }) {
+  return (
+    <Card>
+      <CardHeader>
+        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <BarChart2 size={12} className="text-cyan-400" />
+          {title}
+        </h3>
+      </CardHeader>
+      <CardBody className="py-4 space-y-3">
+        {total === 0 ? (
+          <p className="text-xs text-slate-600 text-center py-2">No data yet</p>
+        ) : (
+          segments.map(({ label, count, color, bg }) => {
+            const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+            return (
+              <div key={label}>
+                <div className="flex items-center justify-between mb-1">
+                  <span className={clsx('text-xs font-medium capitalize', color)}>{label}</span>
+                  <span className="text-xs text-slate-500 font-mono">{count} · {pct}%</span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-slate-800 overflow-hidden">
+                  <div
+                    className={clsx('h-full rounded-full transition-all duration-500', bg)}
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })
+        )}
+      </CardBody>
+    </Card>
+  );
+}
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -160,6 +198,38 @@ export function Dashboard() {
             </CardBody>
           </Card>
         ))}
+      </div>
+
+      {/* ── Security posture KPIs ────────────────────── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <MiniBarChart
+          title="Alerts by Verdict"
+          total={entries.length}
+          segments={[
+            { label: 'Malicious',  count: stats.verdict_counts.malicious,  color: 'text-red-400',     bg: 'bg-red-500' },
+            { label: 'Suspicious', count: stats.verdict_counts.suspicious, color: 'text-amber-400',   bg: 'bg-amber-500' },
+            { label: 'Benign',     count: stats.verdict_counts.benign,     color: 'text-emerald-400', bg: 'bg-emerald-500' },
+          ]}
+        />
+        <MiniBarChart
+          title="Alerts by Severity"
+          total={entries.length}
+          segments={[
+            { label: 'High Confidence',   count: stats.confidence_counts.high,   color: 'text-red-400',     bg: 'bg-red-500' },
+            { label: 'Medium Confidence', count: stats.confidence_counts.medium, color: 'text-amber-400',   bg: 'bg-amber-400' },
+            { label: 'Low Confidence',    count: stats.confidence_counts.low,    color: 'text-slate-400',   bg: 'bg-slate-500' },
+          ]}
+        />
+        <MiniBarChart
+          title="Alerts by Priority"
+          total={entries.length}
+          segments={[
+            { label: 'P0 Critical', count: stats.priority_counts.P0,    color: 'text-red-400',    bg: 'bg-red-500' },
+            { label: 'P1 High',     count: stats.priority_counts.P1,    color: 'text-orange-400', bg: 'bg-orange-500' },
+            { label: 'P2 Medium',   count: stats.priority_counts.P2,    color: 'text-amber-400',  bg: 'bg-amber-400' },
+            { label: 'P3 Low',      count: stats.priority_counts.P3,    color: 'text-blue-400',   bg: 'bg-blue-500' },
+          ]}
+        />
       </div>
 
       {/* ── Recent triages ────────────────────────────── */}

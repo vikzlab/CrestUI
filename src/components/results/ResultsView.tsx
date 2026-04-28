@@ -9,6 +9,7 @@ import { AlertInfoCard } from './AlertInfoCard';
 import { EnrichmentCard } from './EnrichmentCard';
 import { AIAnalysisCard } from './AIAnalysisCard';
 import { ActionsCard } from './ActionsCard';
+import { TriagePipelineVisualizer } from './TriagePipelineVisualizer';
 import { Button } from '@/components/ui/Button';
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 import { formatDuration } from '@/utils/formatters';
@@ -69,6 +70,7 @@ export function ResultsView({ result }: ResultsViewProps) {
         {/* Left column */}
         <div className="xl:col-span-1 space-y-6">
           <AlertInfoCard alert={result.alert} />
+          <TriagePipelineVisualizer result={result} />
           <ActionsCard
             verdict={result.verdict.classification}
             suppressAlert={result.verdict.suppress_alert}

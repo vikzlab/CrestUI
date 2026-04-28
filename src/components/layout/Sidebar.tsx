@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { Home, List, History, Settings, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
+import { Home, List, History, Settings, ChevronLeft, ChevronRight, Zap, Plug } from 'lucide-react';
 import { CrestDataLogo } from '@/components/ui/CrestDataLogo';
 import { clsx } from 'clsx';
 
@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { path: '/', icon: Home, label: 'Dashboard', exact: true },
   { path: '/queue', icon: List, label: 'Alert Queue' },
   { path: '/history', icon: History, label: 'History' },
+  { path: '/configuration', icon: Plug, label: 'Integrations' },
   { path: '/settings', icon: Settings, label: 'Settings' },
 ];
 

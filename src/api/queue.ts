@@ -13,7 +13,7 @@ const MOCK_QUEUE: QueueAlert[] = [
     indicator_type: 'domain',
     age_minutes: 3,
     auto_triggered: true,
-    triage_status: 'pending',
+    triage_status: 'running',
   },
   {
     id: 'q-002',
@@ -49,7 +49,8 @@ const MOCK_QUEUE: QueueAlert[] = [
     indicator_type: 'hash',
     age_minutes: 45,
     auto_triggered: false,
-    triage_status: 'pending',
+    triage_status: 'complete',
+    triage_id: 'tr-mock-2888',
   },
   {
     id: 'q-005',
@@ -61,7 +62,7 @@ const MOCK_QUEUE: QueueAlert[] = [
     indicator_type: 'ip',
     age_minutes: 67,
     auto_triggered: false,
-    triage_status: 'pending',
+    triage_status: 'error',
   },
   {
     id: 'q-006',

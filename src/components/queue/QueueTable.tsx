@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { SkeletonRow } from '@/components/ui/Skeleton';
 import { clsx } from 'clsx';
 
+
 interface QueueTableProps {
   alerts: QueueAlert[];
   isLoading: boolean;
@@ -19,6 +20,9 @@ type PriorityFilter = 'all' | 'P0' | 'P1' | 'P2' | 'P3';
 
 export function QueueTable({ alerts, isLoading, onRefresh, onTriage, runningKeys = new Set() }: QueueTableProps) {
   const [priorityFilter, setPriorityFilter] = useState<PriorityFilter>('all');
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  const toggleExpand = (id: string) => setExpandedId((prev) => (prev === id ? null : id));
 
   const filtered = alerts.filter((a) => {
     if (priorityFilter === 'all') return true;
@@ -72,9 +76,10 @@ export function QueueTable({ alerts, isLoading, onRefresh, onTriage, runningKeys
                   { label: 'Issue Key', width: 'w-28' },
                   { label: 'Summary' },
                   { label: 'Priority', width: 'w-24' },
+                  { label: 'Status', width: 'w-28' },
                   { label: 'Age', width: 'w-16' },
                   { label: 'Indicator', width: 'w-40' },
-                  { label: 'Actions', width: 'w-32' },
+                  { label: 'Actions', width: 'w-36' },
                 ].map(({ label, width }) => (
                   <th
                     key={label}
@@ -97,7 +102,7 @@ export function QueueTable({ alerts, isLoading, onRefresh, onTriage, runningKeys
                 : filtered.length === 0
                 ? (
                   <tr>
-                    <td colSpan={7} className="px-4 py-12 text-center text-slate-500 text-sm">
+                    <td colSpan={8} className="px-4 py-12 text-center text-slate-500 text-sm">
                       No alerts in queue matching the selected filter.
                     </td>
                   </tr>
@@ -109,8 +114,11 @@ export function QueueTable({ alerts, isLoading, onRefresh, onTriage, runningKeys
                     index={i}
                     onTriage={onTriage}
                     isRunning={runningKeys.has(alert.issue_key)}
+                    isExpanded={expandedId === alert.id}
+                    onToggleExpand={() => toggleExpand(alert.id)}
                   />
                 ))}
+
             </tbody>
           </table>
         </div>

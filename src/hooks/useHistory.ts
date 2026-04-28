@@ -25,6 +25,19 @@ export function useHistory(filters: HistoryFilters = {}) {
   const stats = useMemo(() => {
     const today = new Date().toISOString().split('T')[0];
     const todayEntries = entries.filter((e) => e.timestamp.startsWith(today));
+
+    const verdictCounts = { benign: 0, suspicious: 0, malicious: 0 };
+    const confidenceCounts = { high: 0, medium: 0, low: 0 };
+    const priorityCounts: Record<string, number> = { P0: 0, P1: 0, P2: 0, P3: 0, Other: 0 };
+
+    for (const e of entries) {
+      verdictCounts[e.verdict] = (verdictCounts[e.verdict] ?? 0) + 1;
+      confidenceCounts[e.confidence] = (confidenceCounts[e.confidence] ?? 0) + 1;
+      const p = e.triage_result?.alert?.priority ?? 'Other';
+      const bucket = ['P0', 'P1', 'P2', 'P3'].includes(p) ? p : 'Other';
+      priorityCounts[bucket] = (priorityCounts[bucket] ?? 0) + 1;
+    }
+
     return {
       triaged_today: todayEntries.length,
       malicious_count: entries.filter((e) => e.verdict === 'malicious').length,
@@ -32,6 +45,9 @@ export function useHistory(filters: HistoryFilters = {}) {
         entries.length > 0
           ? Math.round(entries.reduce((sum, e) => sum + e.duration_ms, 0) / entries.length)
           : 0,
+      verdict_counts: verdictCounts,
+      confidence_counts: confidenceCounts,
+      priority_counts: priorityCounts,
     };
   }, [entries]);
 
